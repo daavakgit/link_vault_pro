@@ -8,7 +8,6 @@ import {
   LayoutGrid,
   Link2,
   FolderKanban,
-  User,
   Settings,
   Plus,
   LogOut,
@@ -39,11 +38,10 @@ export const Sidebar: React.FC<SidebarProps> = ({ user, onOpenAddModal }) => {
   };
 
   const navItems = [
-    { label: 'Dashboard', href: '/', icon: LayoutGrid },
+    { label: 'Dashboard', href: '/dashboard', icon: LayoutGrid },
     { label: 'My Links', href: '/my-links', icon: Link2 },
     { label: 'Categories', href: '/categories', icon: FolderKanban },
     { label: 'Search', href: '/search', icon: Search },
-    { label: 'Profile', href: '/profile', icon: User },
     { label: 'Settings', href: '/settings', icon: Settings },
   ];
 
@@ -82,8 +80,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ user, onOpenAddModal }) => {
         {/* Top Header & Navigation */}
         <div className="flex flex-col gap-6">
           {/* Logo Header */}
-          <div className="flex items-center gap-3 pt-1 px-1">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-indigo-500 flex items-center justify-center text-white shadow-lg shadow-indigo-600/30">
+          <Link href="/dashboard" className="flex items-center gap-3 pt-1 px-1 group">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-indigo-500 flex items-center justify-center text-white shadow-lg shadow-indigo-600/30 group-hover:scale-105 transition">
               <Rocket className="w-5 h-5" />
             </div>
             <div className="flex flex-col">
@@ -92,15 +90,15 @@ export const Sidebar: React.FC<SidebarProps> = ({ user, onOpenAddModal }) => {
               </span>
               <span className="text-xs text-slate-400 font-medium">Personal Workspace</span>
             </div>
-          </div>
+          </Link>
 
           {/* Navigation Links */}
           <nav className="flex flex-col gap-1.5 mt-2">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive =
-                item.href === '/'
-                  ? pathname === '/'
+                item.href === '/dashboard'
+                  ? pathname === '/dashboard'
                   : pathname.startsWith(item.href);
 
               return (
@@ -142,7 +140,10 @@ export const Sidebar: React.FC<SidebarProps> = ({ user, onOpenAddModal }) => {
 
           {/* User Info card or simple Logout */}
           {user ? (
-            <div className="flex items-center justify-between bg-[#0e1626] border border-[#1b263e] p-3 rounded-xl">
+            <Link
+              href="/settings"
+              className="flex items-center justify-between bg-[#0e1626] border border-[#1b263e] p-3 rounded-xl hover:border-indigo-500/40 transition group"
+            >
               <div className="flex items-center gap-3 overflow-hidden">
                 <img
                   src={
@@ -155,7 +156,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ user, onOpenAddModal }) => {
                   className="w-9 h-9 rounded-full bg-slate-700 object-cover shrink-0 border border-slate-600"
                 />
                 <div className="flex flex-col truncate">
-                  <span className="text-sm font-semibold text-white truncate leading-tight">
+                  <span className="text-sm font-semibold text-white truncate leading-tight group-hover:text-indigo-300">
                     {user.name}
                   </span>
                   <span className="text-[10px] uppercase tracking-wider font-semibold text-indigo-400">
@@ -164,13 +165,17 @@ export const Sidebar: React.FC<SidebarProps> = ({ user, onOpenAddModal }) => {
                 </div>
               </div>
               <button
-                onClick={handleLogout}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  handleLogout();
+                }}
                 title="Logout"
                 className="text-slate-400 hover:text-red-400 p-1.5 rounded-lg hover:bg-[#19243a] transition"
               >
                 <LogOut className="w-4 h-4" />
               </button>
-            </div>
+            </Link>
           ) : (
             <button
               onClick={handleLogout}

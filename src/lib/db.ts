@@ -31,15 +31,22 @@ export async function connectToDatabase(): Promise<typeof mongoose> {
     cached.promise = (async () => {
       if (mongoUri) {
         try {
-          // Try connecting to provided URI with 3 second timeout
+          console.log('[MongoDB] Attempting connection to MONGODB_URI...');
           const instance = await mongoose.connect(mongoUri, {
             ...opts,
-            serverSelectionTimeoutMS: 3000,
+            serverSelectionTimeoutMS: 5000,
           });
-          console.log('[MongoDB] Successfully connected to configured MONGODB_URI');
+          console.log('[MongoDB] ✅ Successfully connected to MongoDB Atlas!');
           return instance;
-        } catch (err) {
-          console.warn('[MongoDB] Could not connect to MONGODB_URI, spinning up in-memory MongoDB fallback...');
+        } catch (err: any) {
+          console.warn(
+            '[MongoDB Warning] Could not connect to configured MONGODB_URI:',
+            err.message
+          );
+          console.warn(
+            '[MongoDB Tip] If using MongoDB Atlas, ensure your IP address is allowed in Atlas Network Access (0.0.0.0/0).'
+          );
+          console.warn('[MongoDB] Falling back to local in-memory database...');
         }
       }
 
@@ -50,10 +57,10 @@ export async function connectToDatabase(): Promise<typeof mongoose> {
           cached.memoryServer = await MongoMemoryServer.create();
         }
         const memoryUri = cached.memoryServer.getUri();
-        console.log('[MongoDB] Connected to in-memory MongoDB at:', memoryUri);
+        console.log('[MongoDB] Connected to fallback in-memory database at:', memoryUri);
         return await mongoose.connect(memoryUri, opts);
       } catch (memErr) {
-        console.error('[MongoDB] Failed to start in-memory MongoDB:', memErr);
+        console.error('[MongoDB Error] Failed to start in-memory MongoDB:', memErr);
         throw memErr;
       }
     })();

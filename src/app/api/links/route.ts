@@ -11,63 +11,6 @@ const createLinkSchema = z.object({
   category: z.enum(['Coding', 'Projects', 'Career', 'Education', 'Social', 'Learning', 'Others']),
 });
 
-const DEFAULT_SAMPLE_LINKS = [
-  {
-    name: 'Tailwind CSS Documentation',
-    url: 'https://tailwindcss.com/docs',
-    category: 'Coding',
-    description: 'Official Tailwind CSS documentation and utility reference.',
-  },
-  {
-    name: 'LinkVault Architecture Diagram',
-    url: 'https://figma.com/file/xyz123/architecture',
-    category: 'Projects',
-    description: 'Figma diagram of system architecture and DB schema.',
-  },
-  {
-    name: 'Advanced WebGL Shaders Tutorial',
-    url: 'https://thebookofshaders.com',
-    category: 'Learning',
-    description: 'Guide to fragment shaders and WebGL graphics.',
-  },
-  {
-    name: 'Updated Resume 2024',
-    url: 'https://drive.google.com/file/d/resume-2024',
-    category: 'Career',
-    description: 'Current CV and portfolio achievements.',
-  },
-  {
-    name: 'Design Inspiration Board',
-    url: 'https://pinterest.com/ui-ux-ideas',
-    category: 'Social',
-    description: 'Curated gallery of SaaS web design concepts.',
-  },
-  {
-    name: 'GitHub Repositories',
-    url: 'https://github.com/linkvault-main',
-    category: 'Coding',
-    description: 'Direct access to core platform repositories and codebase.',
-  },
-  {
-    name: 'Design System Tokens',
-    url: 'https://figma.com/design-tokens',
-    category: 'Projects',
-    description: 'Figma library source of truth and exported JSON tokens.',
-  },
-  {
-    name: 'Q3 Marketing Plan',
-    url: 'https://docs.google.com/q3-marketing',
-    category: 'Education',
-    description: 'Google doc with budget breakdown and campaign goals.',
-  },
-  {
-    name: 'Weekly Sync Meet',
-    url: 'https://zoom.us/j/weekly-sync',
-    category: 'Others',
-    description: 'Recurring Zoom meeting link for the core team.',
-  },
-];
-
 export async function GET(req: NextRequest) {
   try {
     const auth = await getAuthUser(req);
@@ -80,18 +23,6 @@ export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);
     const search = searchParams.get('search') || '';
     const category = searchParams.get('category') || '';
-
-    // Auto-seed if user has 0 links total
-    const totalCount = await Link.countDocuments({ userId: auth.userId });
-    if (totalCount === 0 && !search && (!category || category === 'All')) {
-      console.log('[Links API] Auto-seeding sample Stitch links for user:', auth.userId);
-      await Link.insertMany(
-        DEFAULT_SAMPLE_LINKS.map((item) => ({
-          ...item,
-          userId: auth.userId,
-        }))
-      );
-    }
 
     const filter: any = { userId: auth.userId };
 

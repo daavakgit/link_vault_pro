@@ -1,13 +1,17 @@
 'use client';
 
-import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { Lock, Eye, EyeOff, Loader2, ArrowRight } from 'lucide-react';
+import React, { useState, useEffect, Suspense } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { Lock, Eye, EyeOff, Loader2, Rocket, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
+import Link from 'next/link';
 
-export default function AuthPage() {
+function AuthPageContent() {
   const router = useRouter();
-  const [isRegister, setIsRegister] = useState(false);
+  const searchParams = useSearchParams();
+  const initialMode = searchParams.get('mode');
+
+  const [isRegister, setIsRegister] = useState(initialMode === 'register');
   const [showPassword, setShowPassword] = useState(false);
 
   // Form fields
@@ -18,6 +22,12 @@ export default function AuthPage() {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    if (searchParams.get('mode') === 'register') {
+      setIsRegister(true);
+    }
+  }, [searchParams]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -44,13 +54,19 @@ export default function AuthPage() {
       const data = await res.json();
 
       if (!res.ok || data.error) {
-        setError(data.error || 'Authentication failed');
+        if (res.status === 401 && !isRegister) {
+          setError(
+            data.error || 'Invalid email or password. Don\'t have an account? Click "Create one" below to register.'
+          );
+        } else {
+          setError(data.error || 'Authentication failed');
+        }
         setLoading(false);
         return;
       }
 
       // Successful auth -> redirect to dashboard
-      router.push('/');
+      router.push('/dashboard');
       router.refresh();
     } catch (err: any) {
       setError(err.message || 'An unexpected error occurred');
@@ -58,10 +74,44 @@ export default function AuthPage() {
     }
   };
 
-  const handleGoogleAuth = () => {
-    // Quick demo google auth fast-login
-    setEmail('demo.user@linkvault.app');
-    setPassword('demopassword123');
+  const handleGoogleAuth = async () => {
+    // Quick Demo Google OAuth auto-registration/login
+    try {
+      setLoading(true);
+      setError('');
+      const res = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: 'Demo User',
+          email: 'demo.user@linkvault.app',
+          password: 'demopassword123',
+          confirmPassword: 'demopassword123',
+        }),
+      });
+
+      // If already registered, perform login
+      if (!res.ok) {
+        const loginRes = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: 'demo.user@linkvault.app',
+            password: 'demopassword123',
+          }),
+        });
+        if (!loginRes.ok) {
+          throw new Error('Google Demo Auth failed');
+        }
+      }
+
+      router.push('/dashboard');
+      router.refresh();
+    } catch (err: any) {
+      setError(err.message || 'Demo authentication failed');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -74,16 +124,15 @@ export default function AuthPage() {
       >
         {/* Left Pane - Stitch Branding Hero */}
         <div className="bg-[#141b2d] p-8 md:p-10 flex flex-col justify-between relative overflow-hidden border-b md:border-b-0 md:border-r border-[#1e2a44]">
-          {/* Subtle background glow */}
           <div className="absolute top-0 left-0 w-72 h-72 bg-indigo-600/10 rounded-full blur-3xl pointer-events-none" />
 
           {/* Top Logo */}
-          <div className="flex items-center gap-2.5 z-10">
-            <div className="w-8 h-8 rounded-xl bg-indigo-600 flex items-center justify-center text-white shadow-md shadow-indigo-600/30">
-              <Lock className="w-4 h-4" />
+          <Link href="/" className="flex items-center gap-2.5 z-10 group">
+            <div className="w-8 h-8 rounded-xl bg-indigo-600 flex items-center justify-center text-white shadow-md shadow-indigo-600/30 group-hover:scale-105 transition">
+              <Rocket className="w-4 h-4" />
             </div>
             <span className="font-bold text-white tracking-tight text-lg">LinkVault</span>
-          </div>
+          </Link>
 
           {/* Center Content */}
           <div className="my-10 z-10">
@@ -134,7 +183,7 @@ export default function AuthPage() {
           </div>
 
           {error && (
-            <div className="mb-4 p-3 rounded-xl bg-red-950/60 border border-red-800/50 text-red-300 text-xs font-medium">
+            <div className="mb-4 p-3 rounded-xl bg-red-950/60 border border-red-800/50 text-red-300 text-xs font-medium leading-relaxed">
               {error}
             </div>
           )}
@@ -178,7 +227,11 @@ export default function AuthPage() {
                 {!isRegister && (
                   <button
                     type="button"
-                    onClick={() => alert('Password reset email feature: Please use your registered password or contact support.')}
+                    onClick={() =>
+                      setError(
+                        'Password reset instructions: Switch to "Create one" below or contact support.'
+                      )
+                    }
                     className="text-xs text-indigo-400 hover:text-indigo-300 transition"
                   >
                     Forgot?
@@ -244,6 +297,7 @@ export default function AuthPage() {
           <button
             type="button"
             onClick={handleGoogleAuth}
+            disabled={loading}
             className="w-full bg-[#131b2c] hover:bg-[#1a253c] border border-[#1e2a42] text-slate-200 font-medium py-2.5 rounded-xl flex items-center justify-center gap-3 text-sm transition"
           >
             <svg className="w-4 h-4" viewBox="0 0 24 24">
@@ -264,7 +318,7 @@ export default function AuthPage() {
                 d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
               />
             </svg>
-            <span>Continue with Google</span>
+            <span>Continue with Demo Google Auth</span>
           </button>
 
           {/* Toggle Register / Login */}
@@ -273,7 +327,10 @@ export default function AuthPage() {
               <span>
                 Already have an account?{' '}
                 <button
-                  onClick={() => setIsRegister(false)}
+                  onClick={() => {
+                    setIsRegister(false);
+                    setError('');
+                  }}
                   className="text-indigo-400 hover:text-indigo-300 font-medium underline transition"
                 >
                   Sign in
@@ -283,7 +340,10 @@ export default function AuthPage() {
               <span>
                 Don&apos;t have an account?{' '}
                 <button
-                  onClick={() => setIsRegister(true)}
+                  onClick={() => {
+                    setIsRegister(true);
+                    setError('');
+                  }}
                   className="text-indigo-400 hover:text-indigo-300 font-medium underline transition"
                 >
                   Create one
@@ -294,5 +354,13 @@ export default function AuthPage() {
         </div>
       </motion.div>
     </div>
+  );
+}
+
+export default function AuthPage() {
+  return (
+    <Suspense fallback={<div className="text-slate-400 p-8 text-center">Loading auth page...</div>}>
+      <AuthPageContent />
+    </Suspense>
   );
 }
