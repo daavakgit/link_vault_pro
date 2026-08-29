@@ -1,88 +1,40 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { Search, Bell } from 'lucide-react';
+import React from 'react';
+import { Bell } from 'lucide-react';
 import { IUser } from '@/types';
-import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 interface HeaderProps {
   user: IUser | null;
-  onSearchChange?: (val: string) => void;
 }
 
-export const Header: React.FC<HeaderProps> = ({ user, onSearchChange }) => {
-  const router = useRouter();
-  const [searchValue, setSearchValue] = useState('');
-
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
-        e.preventDefault();
-        const searchElem = document.getElementById('header-search-input');
-        if (searchElem) searchElem.focus();
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
-
-  const handleSearchSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (searchValue.trim()) {
-      router.push(`/search?q=${encodeURIComponent(searchValue.trim())}`);
-    }
-  };
-
+export const Header: React.FC<HeaderProps> = ({ user }) => {
   return (
-    <header className="flex items-center justify-between gap-4 py-4 px-6 bg-[#080d19] border-b border-[#172238] sticky top-0 z-30">
-      {/* Search Input Box */}
-      <form onSubmit={handleSearchSubmit} className="relative flex-1 max-w-md">
-        <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-        <input
-          id="header-search-input"
-          type="text"
-          value={searchValue}
-          onChange={(e) => {
-            setSearchValue(e.target.value);
-            if (onSearchChange) onSearchChange(e.target.value);
-          }}
-          placeholder="Search your links..."
-          className="w-full bg-[#101726] border border-[#1d273e] text-slate-100 placeholder-slate-500 text-sm pl-10 pr-14 py-2 rounded-xl focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition"
-        />
-        <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1 text-[11px] font-medium text-slate-500 bg-[#162035] border border-[#232f4a] px-1.5 py-0.5 rounded">
-          <span>⌘</span>
-          <span>K</span>
-        </div>
-      </form>
-
-      {/* Right Controls */}
+    <header className="h-16 shrink-0 flex items-center justify-end px-4 md:px-16 border-b border-[#464555]/10 bg-[#0b1326]/80 backdrop-blur-md z-30 sticky top-0">
+      {/* Right Actions only */}
       <div className="flex items-center gap-4">
-        {/* Notifications */}
+        {/* Notification Bell */}
         <button
           title="Notifications"
-          className="p-2 rounded-xl text-slate-400 hover:text-white bg-[#101726] border border-[#1d273e] hover:bg-[#182238] transition relative"
+          className="text-[#c7c4d8] hover:text-[#dae2fd] hover:bg-[#222a3d] p-2 rounded-full transition-colors relative"
         >
-          <Bell className="w-4 h-4" />
-          <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-indigo-500" />
+          <Bell className="w-5 h-5" />
+          <span className="absolute top-2 right-2 w-2 h-2 bg-[#c3c0ff] rounded-full ring-2 ring-[#0b1326]" />
         </button>
 
         {/* Profile Avatar */}
         {user && (
-          <button
-            onClick={() => router.push('/profile')}
-            className="flex items-center gap-2 p-0.5 rounded-full border border-indigo-500/40 hover:border-indigo-400 transition"
-          >
+          <Link href="/profile">
             <img
               src={
                 user.avatar ||
-                `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(
-                  user.name
-                )}`
+                `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(user.name)}`
               }
               alt={user.name}
-              className="w-8 h-8 rounded-full object-cover bg-slate-800"
+              className="w-9 h-9 rounded-full object-cover ring-2 ring-[#222a3d] cursor-pointer hover:ring-[#c3c0ff]/50 transition-all"
             />
-          </button>
+          </Link>
         )}
       </div>
     </header>

@@ -3,7 +3,6 @@
 import React, { useState } from 'react';
 import { ILink, CategoryType } from '@/types';
 import { cleanUrlDisplay, formatUrlWithProtocol } from '@/lib/utils';
-import { CATEGORY_COLORS } from '@/lib/constants';
 import {
   Link2,
   Copy,
@@ -30,6 +29,46 @@ interface LinkCardProps {
   onCopy?: (url: string) => void;
 }
 
+// Stitch-exact category icon colors
+const getCategoryIcon = (category: CategoryType) => {
+  switch (category) {
+    case 'Coding':
+      return <Code className="w-6 h-6 text-[#c3c0ff]" />;
+    case 'Projects':
+      return <Palette className="w-6 h-6 text-[#ffb695]" />;
+    case 'Career':
+      return <Briefcase className="w-6 h-6 text-[#c0c1ff]" />;
+    case 'Education':
+      return <GraduationCap className="w-6 h-6 text-[#c3c0ff]" />;
+    case 'Social':
+      return <Users className="w-6 h-6 text-[#ffb695]" />;
+    case 'Learning':
+      return <FileText className="w-6 h-6 text-[#c0c1ff]" />;
+    default:
+      return <Bookmark className="w-6 h-6 text-[#dae2fd]" />;
+  }
+};
+
+// Stitch-exact category badge styles
+const getCategoryBadge = (category: CategoryType) => {
+  switch (category) {
+    case 'Coding':
+      return 'bg-[#3131c0]/20 text-[#c0c1ff]';
+    case 'Projects':
+      return 'bg-[#a44100]/20 text-[#ffb695]';
+    case 'Career':
+      return 'bg-[#2f2ebe]/20 text-[#b0b2ff]';
+    case 'Education':
+      return 'bg-[#3131c0]/20 text-[#c0c1ff]';
+    case 'Social':
+      return 'bg-[#a44100]/20 text-[#ffb695]';
+    case 'Learning':
+      return 'bg-[#464555]/30 text-[#c7c4d8]';
+    default:
+      return 'bg-[#464555]/30 text-[#c7c4d8]';
+  }
+};
+
 export const LinkCard: React.FC<LinkCardProps> = ({
   link,
   variant = 'grid',
@@ -52,94 +91,110 @@ export const LinkCard: React.FC<LinkCardProps> = ({
     window.open(formatUrlWithProtocol(link.url), '_blank', 'noopener,noreferrer');
   };
 
-  const getCategoryIcon = (category: CategoryType) => {
-    switch (category) {
-      case 'Coding':
-        return <Code className="w-5 h-5 text-indigo-400" />;
-      case 'Projects':
-        return <Palette className="w-5 h-5 text-purple-400" />;
-      case 'Career':
-        return <Briefcase className="w-5 h-5 text-blue-400" />;
-      case 'Education':
-        return <GraduationCap className="w-5 h-5 text-cyan-400" />;
-      case 'Social':
-        return <Users className="w-5 h-5 text-pink-400" />;
-      case 'Learning':
-        return <FileText className="w-5 h-5 text-emerald-400" />;
-      default:
-        return <Bookmark className="w-5 h-5 text-slate-400" />;
-    }
-  };
-
-  const badgeStyle = CATEGORY_COLORS[link.category as CategoryType] || CATEGORY_COLORS.Others;
-
+  // ─── RECENT CARD (Dashboard) ──────────────────────────────────────────────
   if (variant === 'recent') {
     return (
       <motion.div
         whileHover={{ y: -2 }}
-        className="group relative bg-[#101726] border border-[#1b253b] hover:border-[#2b3a5c] p-4 rounded-2xl transition-all flex items-start gap-4 shadow-sm hover:shadow-lg hover:shadow-indigo-950/20"
+        className="group relative bg-[#171f33] border border-[#464555]/20 hover:border-[#464555]/50 rounded-xl p-4 flex gap-4 items-start transition-all hover:bg-[#131b2e] shadow-lg"
       >
         {/* Left Icon Box */}
-        <div className="w-11 h-11 rounded-xl bg-[#172136] border border-[#23314f] flex items-center justify-center shrink-0 group-hover:bg-[#1f2d4a] transition">
+        <div className="w-12 h-12 shrink-0 rounded-lg bg-[#31394d] flex items-center justify-center shadow-inner border border-[#464555]/20">
           {getCategoryIcon(link.category)}
         </div>
 
         {/* Content */}
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center justify-between gap-2 mb-1">
-            <h3 className="font-semibold text-white text-base truncate group-hover:text-indigo-200 transition">
+        <div className="flex-1 min-w-0 flex flex-col gap-1">
+          <div className="flex items-center justify-between gap-2">
+            <h4 className="text-base font-semibold text-[#dae2fd] truncate group-hover:text-white transition-colors">
               {link.name}
-            </h3>
+            </h4>
             <span
-              className={`text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full border ${badgeStyle.bg} ${badgeStyle.text} ${badgeStyle.border}`}
+              className={`px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider shrink-0 ${getCategoryBadge(
+                link.category
+              )}`}
             >
               {link.category}
             </span>
           </div>
 
-          <p className="text-xs text-indigo-300/80 font-mono truncate mb-1">
+          <a
+            href={formatUrlWithProtocol(link.url)}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={(e) => e.stopPropagation()}
+            className="text-xs font-mono text-[#c3c0ff] hover:underline truncate w-fit"
+          >
             {cleanUrlDisplay(link.url)}
-          </p>
+          </a>
 
           {link.description && (
-            <p className="text-xs text-slate-400 line-clamp-1 leading-relaxed">
-              {link.description}
-            </p>
+            <p className="text-xs text-[#c7c4d8] line-clamp-1 mt-0.5">{link.description}</p>
           )}
         </div>
 
-        {/* Actions Menu */}
-        <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+        {/* Hover Actions — Stitch-exact floating overlay */}
+        <div className="absolute right-4 top-4 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity bg-[#131b2e] pl-2 rounded-l-lg shadow-[-10px_0_10px_rgba(19,27,46,0.9)] border-l border-y border-[#464555]/30">
           <button
             onClick={handleCopy}
-            title="Copy URL"
-            className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-[#1d2944] transition"
+            title="Copy Link"
+            className="p-1.5 text-[#c7c4d8] hover:text-[#c3c0ff] hover:bg-[#222a3d] rounded transition-colors"
           >
-            {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+            {copied ? (
+              <Check className="w-4 h-4 text-emerald-400" />
+            ) : (
+              <Copy className="w-4 h-4" />
+            )}
           </button>
           <button
             onClick={handleOpen}
-            title="Open link"
-            className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-[#1d2944] transition"
+            title="Open Link"
+            className="p-1.5 text-[#c7c4d8] hover:text-[#dae2fd] hover:bg-[#222a3d] rounded transition-colors"
           >
-            <ExternalLink className="w-3.5 h-3.5" />
+            <ExternalLink className="w-4 h-4" />
           </button>
+          {onEdit && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onEdit(link);
+              }}
+              title="Edit"
+              className="p-1.5 text-[#c7c4d8] hover:text-[#dae2fd] hover:bg-[#222a3d] rounded transition-colors"
+            >
+              <Edit2 className="w-4 h-4" />
+            </button>
+          )}
+          {onDelete && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onDelete(link);
+              }}
+              title="Delete"
+              className="p-1.5 text-[#c7c4d8] hover:text-[#ffb4ab] hover:bg-[#ffb4ab]/10 rounded transition-colors"
+            >
+              <Trash2 className="w-4 h-4" />
+            </button>
+          )}
         </div>
       </motion.div>
     );
   }
 
-  // Grid Card View (My Links Page)
+  // ─── GRID CARD (My Links / Categories) ───────────────────────────────────
   return (
     <motion.div
       whileHover={{ y: -3 }}
-      className="group relative bg-[#101726] border border-[#1b253b] hover:border-[#2d3d61] p-5 rounded-2xl transition-all flex flex-col justify-between h-44 shadow-sm hover:shadow-xl hover:shadow-indigo-950/30"
+      className="group relative bg-[#171f33] border border-[#464555]/20 hover:border-[#464555]/40 p-5 rounded-xl transition-all flex flex-col justify-between h-44 shadow-lg hover:shadow-xl hover:bg-[#131b2e]"
     >
       <div>
-        {/* Top Header: Badge + Actions */}
+        {/* Top: Badge + Actions */}
         <div className="flex items-center justify-between mb-3">
           <span
-            className={`text-[10px] uppercase font-bold tracking-wider px-2.5 py-0.5 rounded-full border ${badgeStyle.bg} ${badgeStyle.text} ${badgeStyle.border}`}
+            className={`text-[10px] uppercase font-bold tracking-wider px-2.5 py-0.5 rounded-full ${getCategoryBadge(
+              link.category
+            )}`}
           >
             {link.category}
           </span>
@@ -148,14 +203,18 @@ export const LinkCard: React.FC<LinkCardProps> = ({
             <button
               onClick={handleCopy}
               title="Copy URL"
-              className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-[#1a253d] transition"
+              className="p-1.5 rounded-lg text-[#c7c4d8] hover:text-[#c3c0ff] hover:bg-[#222a3d] transition"
             >
-              {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+              {copied ? (
+                <Check className="w-3.5 h-3.5 text-emerald-400" />
+              ) : (
+                <Copy className="w-3.5 h-3.5" />
+              )}
             </button>
             <button
               onClick={handleOpen}
               title="Open link"
-              className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-[#1a253d] transition"
+              className="p-1.5 rounded-lg text-[#c7c4d8] hover:text-[#dae2fd] hover:bg-[#222a3d] transition"
             >
               <ExternalLink className="w-3.5 h-3.5" />
             </button>
@@ -166,7 +225,7 @@ export const LinkCard: React.FC<LinkCardProps> = ({
                   onEdit(link);
                 }}
                 title="Edit link"
-                className="p-1.5 rounded-lg text-slate-400 hover:text-indigo-300 hover:bg-[#1a253d] transition"
+                className="p-1.5 rounded-lg text-[#c7c4d8] hover:text-[#c3c0ff] hover:bg-[#222a3d] transition"
               >
                 <Edit2 className="w-3.5 h-3.5" />
               </button>
@@ -178,7 +237,7 @@ export const LinkCard: React.FC<LinkCardProps> = ({
                   onDelete(link);
                 }}
                 title="Delete link"
-                className="p-1.5 rounded-lg text-slate-400 hover:text-red-400 hover:bg-[#1a253d] transition"
+                className="p-1.5 rounded-lg text-[#c7c4d8] hover:text-[#ffb4ab] hover:bg-[#ffb4ab]/10 transition"
               >
                 <Trash2 className="w-3.5 h-3.5" />
               </button>
@@ -187,21 +246,19 @@ export const LinkCard: React.FC<LinkCardProps> = ({
         </div>
 
         {/* Title */}
-        <h3 className="font-semibold text-white text-base leading-snug group-hover:text-indigo-200 transition line-clamp-1 mb-2">
+        <h3 className="font-semibold text-[#dae2fd] text-base leading-snug group-hover:text-white transition line-clamp-1 mb-2">
           {link.name}
         </h3>
 
-        {/* Description if present */}
+        {/* Description */}
         {link.description && (
-          <p className="text-xs text-slate-400 line-clamp-1 mb-2 font-normal">
-            {link.description}
-          </p>
+          <p className="text-xs text-[#c7c4d8] line-clamp-1 mb-2">{link.description}</p>
         )}
       </div>
 
-      {/* Footer: Clean URL */}
-      <div className="flex items-center gap-1.5 text-xs text-slate-400 group-hover:text-indigo-300 transition pt-2 border-t border-[#162033]">
-        <Link2 className="w-3.5 h-3.5 text-slate-500 shrink-0" />
+      {/* Footer: URL */}
+      <div className="flex items-center gap-1.5 text-xs text-[#918fa1] group-hover:text-[#c3c0ff] transition pt-2 border-t border-[#464555]/20">
+        <Link2 className="w-3.5 h-3.5 shrink-0" />
         <span className="truncate font-mono">{cleanUrlDisplay(link.url)}</span>
       </div>
     </motion.div>

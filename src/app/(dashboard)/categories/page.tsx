@@ -21,8 +21,8 @@ export default function CategoriesPage() {
     <div className="flex flex-col gap-8">
       {/* Title */}
       <div>
-        <h1 className="text-3xl font-extrabold text-white tracking-tight">Categories</h1>
-        <p className="text-sm text-slate-400 mt-1">
+        <h1 className="text-3xl font-extrabold text-[#dae2fd] tracking-tight">Categories</h1>
+        <p className="text-sm text-[#c7c4d8] mt-1">
           Explore and manage your saved links by folder.
         </p>
       </div>
@@ -31,10 +31,10 @@ export default function CategoriesPage() {
       <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3">
         <button
           onClick={() => setSelectedCat('All')}
-          className={`p-4 rounded-2xl border text-left flex flex-col justify-between transition-all ${
+          className={`p-4 rounded-xl border text-left flex flex-col justify-between transition-all ${
             selectedCat === 'All'
-              ? 'bg-[#5852f6] border-[#6b65ff] text-white shadow-lg shadow-indigo-600/25'
-              : 'bg-[#101726] border-[#1b253b] hover:bg-[#182238] text-slate-300'
+              ? 'bg-[#4f46e5] border-[#4f46e5] text-[#dad7ff] shadow-lg shadow-indigo-600/20'
+              : 'bg-[#171f33] border-[#464555]/20 hover:bg-[#222a3d] text-[#c7c4d8]'
           }`}
         >
           <Layers className="w-5 h-5 mb-2" />
@@ -53,10 +53,10 @@ export default function CategoriesPage() {
             <button
               key={cat}
               onClick={() => setSelectedCat(cat)}
-              className={`p-4 rounded-2xl border text-left flex flex-col justify-between transition-all ${
+              className={`p-4 rounded-xl border text-left flex flex-col justify-between transition-all ${
                 isSelected
-                  ? 'bg-[#5852f6] border-[#6b65ff] text-white shadow-lg shadow-indigo-600/25'
-                  : 'bg-[#101726] border-[#1b253b] hover:bg-[#182238] text-slate-300'
+                  ? 'bg-[#4f46e5] border-[#4f46e5] text-[#dad7ff] shadow-lg shadow-indigo-600/20'
+                  : 'bg-[#171f33] border-[#464555]/20 hover:bg-[#222a3d] text-[#c7c4d8]'
               }`}
             >
               <div
@@ -82,12 +82,12 @@ export default function CategoriesPage() {
 
             return (
               <div key={cat} className="flex flex-col gap-4">
-                <div className="flex items-center gap-2 border-b border-[#172238] pb-2">
-                  <FolderKanban className="w-4 h-4 text-indigo-400" />
-                  <h2 className="text-base font-bold text-white uppercase tracking-wider">
+                <div className="flex items-center gap-2 border-b border-[#464555]/20 pb-2">
+                  <FolderKanban className="w-4 h-4 text-[#c3c0ff]" />
+                  <h2 className="text-base font-bold text-[#dae2fd] uppercase tracking-wider">
                     {cat}
                   </h2>
-                  <span className="text-xs font-semibold text-slate-400 bg-[#162035] px-2 py-0.5 rounded-full">
+                  <span className="text-xs font-semibold text-[#c7c4d8] bg-[#222a3d] px-2 py-0.5 rounded-full">
                     {catLinks.length}
                   </span>
                 </div>
@@ -134,11 +134,11 @@ export default function CategoriesPage() {
               ))}
             </div>
           ) : (
-            <div className="bg-[#101726] border border-[#1b253b] rounded-2xl p-10 text-center flex flex-col items-center justify-center">
-              <p className="text-slate-400 text-sm mb-4">No links stored under &quot;{selectedCat}&quot; category.</p>
+            <div className="bg-[#171f33] border border-[#464555]/20 rounded-xl p-10 text-center flex flex-col items-center justify-center shadow-lg">
+              <p className="text-[#c7c4d8] text-sm mb-4">No links stored under &quot;{selectedCat}&quot; category.</p>
               <button
                 onClick={openAddModal}
-                className="bg-[#5852f6] hover:bg-[#4842eb] text-white text-xs font-medium px-4 py-2 rounded-xl transition flex items-center gap-1.5"
+                className="bg-[#4f46e5] hover:bg-[#4338ca] text-white text-xs font-semibold px-4 py-2 rounded-lg transition flex items-center gap-1.5"
               >
                 <Plus className="w-4 h-4" />
                 <span>Add Link</span>

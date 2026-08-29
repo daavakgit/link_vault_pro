@@ -6,28 +6,28 @@
     --foreground: 210 40% 98%;
   }
 
-  body {
-    background-color: #070b14;
-    color: #f8fafc;
-    font-family: var(--font-inter), system-ui, -apple-system, sans-serif;
+  body, html {
+    background-color: #0b1326;
+    color: #dae2fd;
+    font-family: var(--font-manrope), 'Manrope', system-ui, -apple-system, sans-serif;
   }
 }
 
-/* Custom Sleek Dark Scrollbars */
+/* Stitch-matching deep dark scrollbars */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #080d19;
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #1e2942;
-  border-radius: 9999px;
+  background: #2d3449;
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #2b3a5c;
+  background: #464555;
 }

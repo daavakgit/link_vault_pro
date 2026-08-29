@@ -9,17 +9,23 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
   const { user, openAddModal } = useLinkVault();
 
   return (
-    <div className="min-h-screen bg-[#070b14] text-slate-100 flex">
-      {/* Sidebar */}
+    /* Stitch: bg-surface text-on-surface h-screen flex overflow-hidden */
+    <div className="bg-[#0b1326] text-[#dae2fd] h-screen flex overflow-hidden font-sans antialiased">
+      {/* Sidebar — fixed 256px, desktop only */}
       <Sidebar user={user} onOpenAddModal={openAddModal} />
 
-      {/* Main Content Area */}
-      <div className="flex-1 flex flex-col min-w-0 lg:pl-64 pt-14 lg:pt-0">
+      {/* Main content area — takes remaining width */}
+      <main className="flex-1 flex flex-col h-screen overflow-hidden md:pl-64 pt-14 md:pt-0">
+        {/* Sticky Header — bell + avatar only, no search */}
         <Header user={user} />
-        <main className="flex-1 p-6 md:p-8 max-w-7xl w-full mx-auto">
-          {children}
-        </main>
-      </div>
+
+        {/* Scrollable page canvas */}
+        <div className="flex-1 overflow-y-auto px-4 py-6 md:px-16 md:py-10 pb-24 md:pb-12">
+          <div className="max-w-6xl mx-auto">
+            {children}
+          </div>
+        </div>
+      </main>
     </div>
   );
 }
