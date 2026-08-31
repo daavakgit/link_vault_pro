@@ -13,7 +13,6 @@ import {
   Code,
   Palette,
   FileText,
-  Video,
   Bookmark,
   Briefcase,
   GraduationCap,
@@ -23,6 +22,7 @@ import {
   Edit2,
   Trash2,
   Check,
+  ShieldCheck,
 } from 'lucide-react';
 import Link from 'next/link';
 import { DashboardStats, ILink, CategoryType } from '@/types';
@@ -60,14 +60,7 @@ export default function DashboardPage() {
     loadStats();
   }, [links]);
 
-  const getGreeting = () => {
-    const hour = new Date().getHours();
-    if (hour < 12) return 'Good morning';
-    if (hour < 18) return 'Good afternoon';
-    return 'Good evening';
-  };
-
-  const userName = user?.name ? user.name.split(' ')[0] : 'Alex';
+  const userName = user?.name || 'Daavak';
   const recentLinks = links.slice(0, 4);
 
   const getCategoryIcon = (category: CategoryType) => {
@@ -117,17 +110,23 @@ export default function DashboardPage() {
 
   return (
     <div className="max-w-6xl mx-auto flex flex-col gap-8 pb-12 font-sans">
-      {/* Welcome Section matching Stitch HTML */}
-      <section className="flex flex-col md:flex-row md:items-end justify-between gap-4">
-        <div>
-          <h2 className="text-3xl font-extrabold text-[#dae2fd] tracking-tight mb-2 flex items-center gap-2">
-            <span>
-              {getGreeting()}, {userName}
+      {/* Executive Professional Header */}
+      <section className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-[#464555]/20 pb-6">
+        <div className="flex flex-col gap-1.5">
+          <div className="flex items-center gap-2.5">
+            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-[#3131c0]/20 text-[#c0c1ff] border border-[#3131c0]/40 flex items-center gap-1">
+              <ShieldCheck className="w-3 h-3 text-[#c0c1ff]" />
+              Executive Workspace
             </span>
-            <span className="inline-block animate-bounce">👋</span>
+            <span className="text-xs text-[#918fa1] font-mono">
+              Vault ID: #{user?._id ? user._id.slice(-6).toUpperCase() : 'PRO-88'}
+            </span>
+          </div>
+          <h2 className="text-3xl font-extrabold text-[#dae2fd] tracking-tight">
+            Welcome back, {userName}
           </h2>
-          <p className="text-sm text-[#c7c4d8] max-w-2xl">
-            Keep your important links organized, secure, and ready to access at lightning speed.
+          <p className="text-sm text-[#c7c4d8] max-w-2xl leading-relaxed">
+            Overview of your digital assets, categorized links, and active vault analytics.
           </p>
         </div>
 
