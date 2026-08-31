@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import { CategoryType } from '@/types';
 import { CATEGORIES } from '@/lib/constants';
 
 interface CategoryPillsProps {
@@ -23,10 +22,10 @@ export const CategoryPills: React.FC<CategoryPillsProps> = ({
           <button
             key={cat}
             onClick={() => onSelectCategory(cat)}
-            className={`whitespace-nowrap px-4 py-1.5 rounded-full text-sm font-medium transition-all ${
+            className={`whitespace-nowrap px-4 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wider transition-all active:scale-95 ${
               isSelected
-                ? 'bg-[#5852f6] text-white shadow-md shadow-indigo-600/25'
-                : 'bg-[#101726] hover:bg-[#182238] text-slate-300 border border-[#1e2942]'
+                ? 'bg-[#4f46e5] text-[#dad7ff] shadow-lg shadow-indigo-600/20 border border-[#4f46e5]'
+                : 'bg-[#171f33] hover:bg-[#222a3d] text-[#c7c4d8] border border-[#464555]/30'
             }`}
           >
             {cat}

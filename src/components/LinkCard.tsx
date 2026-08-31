@@ -13,7 +13,6 @@ import {
   Code,
   Palette,
   FileText,
-  Video,
   Bookmark,
   Briefcase,
   GraduationCap,
@@ -118,18 +117,37 @@ export const LinkCard: React.FC<LinkCardProps> = ({
             </span>
           </div>
 
-          <a
-            href={formatUrlWithProtocol(link.url)}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={(e) => e.stopPropagation()}
-            className="text-xs font-mono text-[#c3c0ff] hover:underline truncate w-fit"
-          >
-            {cleanUrlDisplay(link.url)}
-          </a>
+          <div className="flex items-center gap-2 mt-0.5">
+            <a
+              href={formatUrlWithProtocol(link.url)}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
+              className="text-xs font-mono text-[#c3c0ff] hover:underline truncate"
+            >
+              {cleanUrlDisplay(link.url)}
+            </a>
+            <button
+              onClick={handleCopy}
+              title="Copy URL"
+              className="px-2 py-0.5 rounded text-[10px] font-semibold bg-[#222a3d] hover:bg-[#31394d] text-[#c3c0ff] flex items-center gap-1 shrink-0 transition active:scale-95 border border-[#464555]/30"
+            >
+              {copied ? (
+                <>
+                  <Check className="w-3 h-3 text-emerald-400" />
+                  <span className="text-emerald-400 font-bold">Copied</span>
+                </>
+              ) : (
+                <>
+                  <Copy className="w-3 h-3" />
+                  <span>Copy</span>
+                </>
+              )}
+            </button>
+          </div>
 
           {link.description && (
-            <p className="text-xs text-[#c7c4d8] line-clamp-1 mt-0.5">{link.description}</p>
+            <p className="text-xs text-[#c7c4d8] line-clamp-1 mt-1">{link.description}</p>
           )}
         </div>
 
@@ -186,7 +204,7 @@ export const LinkCard: React.FC<LinkCardProps> = ({
   return (
     <motion.div
       whileHover={{ y: -3 }}
-      className="group relative bg-[#171f33] border border-[#464555]/20 hover:border-[#464555]/40 p-5 rounded-xl transition-all flex flex-col justify-between h-44 shadow-lg hover:shadow-xl hover:bg-[#131b2e]"
+      className="group relative bg-[#171f33] border border-[#464555]/20 hover:border-[#464555]/40 p-5 rounded-xl transition-all flex flex-col justify-between h-48 shadow-lg hover:shadow-xl hover:bg-[#131b2e]"
     >
       <div>
         {/* Top: Badge + Actions */}
@@ -256,10 +274,29 @@ export const LinkCard: React.FC<LinkCardProps> = ({
         )}
       </div>
 
-      {/* Footer: URL */}
-      <div className="flex items-center gap-1.5 text-xs text-[#918fa1] group-hover:text-[#c3c0ff] transition pt-2 border-t border-[#464555]/20">
-        <Link2 className="w-3.5 h-3.5 shrink-0" />
-        <span className="truncate font-mono">{cleanUrlDisplay(link.url)}</span>
+      {/* Footer: URL + Visible Copy Button */}
+      <div className="flex items-center justify-between text-xs text-[#918fa1] transition pt-2.5 border-t border-[#464555]/20">
+        <div className="flex items-center gap-1.5 truncate group-hover:text-[#c3c0ff] min-w-0 flex-1">
+          <Link2 className="w-3.5 h-3.5 shrink-0" />
+          <span className="truncate font-mono text-[11px]">{cleanUrlDisplay(link.url)}</span>
+        </div>
+        <button
+          onClick={handleCopy}
+          title="Copy URL"
+          className="ml-2 px-2.5 py-1 rounded text-[11px] font-semibold bg-[#222a3d] hover:bg-[#31394d] text-[#c3c0ff] flex items-center gap-1 shrink-0 transition active:scale-95 border border-[#464555]/30"
+        >
+          {copied ? (
+            <>
+              <Check className="w-3 h-3 text-emerald-400" />
+              <span className="text-emerald-400 font-bold">Copied</span>
+            </>
+          ) : (
+            <>
+              <Copy className="w-3 h-3" />
+              <span>Copy</span>
+            </>
+          )}
+        </button>
       </div>
     </motion.div>
   );
