@@ -7,10 +7,14 @@ import { ToastMessage, Toast } from '@/components/Toast';
 import { AddEditLinkModal } from '@/components/AddEditLinkModal';
 import { DeleteConfirmModal } from '@/components/DeleteConfirmModal';
 
+export type ThemeType = 'dark' | 'light' | 'system';
+
 interface LinkVaultContextType {
   user: IUser | null;
   links: ILink[];
   loading: boolean;
+  theme: ThemeType;
+  setTheme: (theme: ThemeType) => void;
   fetchLinks: (category?: string, search?: string) => Promise<void>;
   refreshUserData: () => Promise<void>;
   openAddModal: () => void;
@@ -26,6 +30,39 @@ export const LinkVaultProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   const [user, setUser] = useState<IUser | null>(null);
   const [links, setLinks] = useState<ILink[]>([]);
   const [loading, setLoading] = useState(true);
+  const [theme, setThemeState] = useState<ThemeType>('dark');
+
+  // Theme apply logic
+  const applyTheme = useCallback((targetTheme: ThemeType) => {
+    const root = document.documentElement;
+    let effectiveTheme: 'dark' | 'light' = 'dark';
+
+    if (targetTheme === 'system') {
+      effectiveTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    } else {
+      effectiveTheme = targetTheme;
+    }
+
+    if (effectiveTheme === 'light') {
+      root.classList.remove('dark');
+      root.classList.add('light');
+    } else {
+      root.classList.remove('light');
+      root.classList.add('dark');
+    }
+  }, []);
+
+  const setTheme = (newTheme: ThemeType) => {
+    setThemeState(newTheme);
+    localStorage.setItem('linkvault_theme', newTheme);
+    applyTheme(newTheme);
+  };
+
+  useEffect(() => {
+    const savedTheme = (localStorage.getItem('linkvault_theme') as ThemeType) || 'dark';
+    setThemeState(savedTheme);
+    applyTheme(savedTheme);
+  }, [applyTheme]);
 
   // Modals state
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -162,6 +199,8 @@ export const LinkVaultProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         user,
         links,
         loading,
+        theme,
+        setTheme,
         fetchLinks,
         refreshUserData,
         openAddModal,

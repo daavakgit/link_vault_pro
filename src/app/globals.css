@@ -2,18 +2,19 @@
 
 @layer base {
   :root {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+    --background: #0b1326;
+    --foreground: #dae2fd;
   }
 
   body, html {
     background-color: #0b1326;
     color: #dae2fd;
     font-family: var(--font-manrope), 'Manrope', system-ui, -apple-system, sans-serif;
+    transition: background-color 0.25s ease, color 0.25s ease;
   }
 }
 
-/* Stitch-matching deep dark scrollbars */
+/* Chrome / Browser Scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -30,4 +31,109 @@
 
 ::-webkit-scrollbar-thumb:hover {
   background: #464555;
+}
+
+/* ==========================================================================
+   Full Site Light Theme Engine
+   ========================================================================== */
+html.light,
+html.light body {
+  background-color: #f8fafc !important;
+  color: #0f172a !important;
+}
+
+/* Structural Backgrounds */
+html.light .bg-\[\#0b1326\],
+html.light .bg-\[\#0b1326\]\/90 {
+  background-color: #f8fafc !important;
+}
+
+html.light .bg-\[\#171f33\],
+html.light .bg-\[\#171f33\]\/50,
+html.light .bg-\[\#0F172A\],
+html.light .bg-\[\#101726\] {
+  background-color: #ffffff !important;
+  border-color: #e2e8f0 !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05) !important;
+}
+
+html.light .bg-\[\#131b2e\],
+html.light .bg-\[\#1b253b\] {
+  background-color: #f1f5f9 !important;
+  border-color: #e2e8f0 !important;
+}
+
+html.light .bg-\[\#222a3d\],
+html.light .bg-\[\#31394d\],
+html.light .bg-\[\#2d3449\] {
+  background-color: #e2e8f0 !important;
+}
+
+html.light .bg-\[\#020617\],
+html.light .bg-\[\#1E293B\] {
+  background-color: #ffffff !important;
+  border-color: #cbd5e1 !important;
+  color: #0f172a !important;
+}
+
+/* Typography & Colors */
+html.light .text-\[\#dae2fd\],
+html.light .text-white,
+html.light h1,
+html.light h2,
+html.light h3,
+html.light h4,
+html.light h5,
+html.light h6 {
+  color: #0f172a !important;
+}
+
+html.light .text-\[\#c7c4d8\],
+html.light .text-slate-400 {
+  color: #475569 !important;
+}
+
+html.light .text-slate-300,
+html.light .text-slate-200 {
+  color: #334155 !important;
+}
+
+html.light .text-slate-500 {
+  color: #64748b !important;
+}
+
+/* Borders */
+html.light .border-\[\#464555\]\/10,
+html.light .border-\[\#464555\]\/20,
+html.light .border-\[\#464555\]\/30,
+html.light .border-\[\#464555\]\/40,
+html.light .border-\[\#464555\]\/50,
+html.light .border-slate-800,
+html.light .border-slate-700,
+html.light .border-slate-700\/80,
+html.light .border-slate-800\/60 {
+  border-color: #e2e8f0 !important;
+}
+
+/* Inputs & Form Elements */
+html.light input,
+html.light select,
+html.light textarea {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+  border-color: #cbd5e1 !important;
+}
+
+html.light input::placeholder,
+html.light textarea::placeholder {
+  color: #94a3b8 !important;
+}
+
+/* Scrollbars in Light Mode */
+html.light ::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+}
+
+html.light ::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
 }

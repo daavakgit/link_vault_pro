@@ -25,7 +25,7 @@ const UserSchema = new Schema<IUserDocument>(
     },
     password: {
       type: String,
-      required: [true, 'Password is required'],
+      required: false,
       select: false,
     },
     avatar: {

@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { Lock, Eye, EyeOff, Loader2, Rocket, ArrowLeft, CheckCircle2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import { signIn } from 'next-auth/react';
 
 function AuthPageContent() {
   const router = useRouter();
@@ -120,37 +121,9 @@ function AuthPageContent() {
     try {
       setLoading(true);
       setError('');
-      setSuccessMessage('');
-      const res = await fetch('/api/auth/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: 'Demo User',
-          email: 'demo.user@linkvault.app',
-          password: 'demopassword123',
-          confirmPassword: 'demopassword123',
-        }),
-      });
-
-      if (!res.ok) {
-        const loginRes = await fetch('/api/auth/login', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            email: 'demo.user@linkvault.app',
-            password: 'demopassword123',
-          }),
-        });
-        if (!loginRes.ok) {
-          throw new Error('Google Demo Auth failed');
-        }
-      }
-
-      router.push('/dashboard');
-      router.refresh();
+      await signIn('google', { callbackUrl: '/dashboard' });
     } catch (err: any) {
-      setError(err.message || 'Demo authentication failed');
-    } finally {
+      setError(err.message || 'Google authentication failed');
       setLoading(false);
     }
   };
@@ -394,7 +367,7 @@ function AuthPageContent() {
                     d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
                   />
                 </svg>
-                <span>Continue with Demo Google Auth</span>
+                <span>Continue with Google</span>
               </button>
 
               {/* Toggle Register / Login */}

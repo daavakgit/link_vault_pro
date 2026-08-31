@@ -23,7 +23,7 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function ProfilePage() {
-  const { user, links, refreshUserData, showToast } = useLinkVault();
+  const { user, links, refreshUserData, showToast, theme, setTheme } = useLinkVault();
 
   // Profile Form State
   const [name, setName] = useState('');
@@ -46,9 +46,6 @@ export default function ProfilePage() {
   const [confirmNewPassword, setConfirmNewPassword] = useState('');
   const [isSavingPassword, setIsSavingPassword] = useState(false);
   const [passwordError, setPasswordError] = useState('');
-
-  // Appearance State
-  const [theme, setTheme] = useState<'dark' | 'light' | 'system'>('dark');
 
   // 2FA Toggle State
   const [twoFactorEnabled, setTwoFactorEnabled] = useState(false);

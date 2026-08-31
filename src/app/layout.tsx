@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Manrope, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
+import { Providers } from '@/components/Providers';
 
 const manrope = Manrope({
   subsets: ['latin'],
@@ -25,7 +26,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${manrope.variable} ${mono.variable} dark antialiased`}>
       <body className="bg-[#070b14] text-slate-100 min-h-screen font-sans selection:bg-indigo-500 selection:text-white">
-        {children}
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

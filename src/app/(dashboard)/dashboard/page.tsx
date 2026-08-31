@@ -22,7 +22,6 @@ import {
   Edit2,
   Trash2,
   Check,
-  ShieldCheck,
 } from 'lucide-react';
 import Link from 'next/link';
 import { DashboardStats, ILink, CategoryType } from '@/types';
@@ -60,7 +59,6 @@ export default function DashboardPage() {
     loadStats();
   }, [links]);
 
-  const userName = user?.name || 'Daavak';
   const recentLinks = links.slice(0, 4);
 
   const getCategoryIcon = (category: CategoryType) => {
@@ -110,23 +108,14 @@ export default function DashboardPage() {
 
   return (
     <div className="max-w-6xl mx-auto flex flex-col gap-8 pb-12 font-sans">
-      {/* Executive Professional Header */}
-      <section className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-[#464555]/20 pb-6">
-        <div className="flex flex-col gap-1.5">
-          <div className="flex items-center gap-2.5">
-            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-[#3131c0]/20 text-[#c0c1ff] border border-[#3131c0]/40 flex items-center gap-1">
-              <ShieldCheck className="w-3 h-3 text-[#c0c1ff]" />
-              Executive Workspace
-            </span>
-            <span className="text-xs text-[#918fa1] font-mono">
-              Vault ID: #{user?._id ? user._id.slice(-6).toUpperCase() : 'PRO-88'}
-            </span>
-          </div>
-          <h2 className="text-3xl font-extrabold text-[#dae2fd] tracking-tight">
-            Welcome back, {userName}
+      {/* Clean & Professional Simple Header */}
+      <section className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#464555]/20 pb-5">
+        <div>
+          <h2 className="text-2xl md:text-3xl font-bold text-[#dae2fd] tracking-tight">
+            Dashboard
           </h2>
-          <p className="text-sm text-[#c7c4d8] max-w-2xl leading-relaxed">
-            Overview of your digital assets, categorized links, and active vault analytics.
+          <p className="text-sm text-[#c7c4d8] mt-1">
+            Manage all your saved links and digital resources.
           </p>
         </div>
 
@@ -139,7 +128,7 @@ export default function DashboardPage() {
         </button>
       </section>
 
-      {/* Stats Overview Bento Grid matching Stitch HTML */}
+      {/* Stats Overview Bento Grid */}
       <section className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* Stat Card 1 */}
         <div className="bg-[#171f33] border border-[#464555]/20 rounded-xl p-5 flex flex-col justify-between relative overflow-hidden group hover:border-[#464555]/40 transition-colors shadow-lg">
@@ -195,7 +184,7 @@ export default function DashboardPage() {
         </div>
       </section>
 
-      {/* Recent Links Section matching Stitch HTML */}
+      {/* Recent Links Section */}
       <section className="flex flex-col gap-4">
         <div className="flex items-center justify-between border-b border-[#464555]/20 pb-2">
           <h3 className="text-xl font-bold text-[#dae2fd]">Recent Links</h3>
@@ -260,7 +249,7 @@ export default function DashboardPage() {
                   </p>
                 </div>
 
-                {/* Floating Hover Actions matching Stitch HTML */}
+                {/* Floating Hover Actions */}
                 <div className="absolute right-4 top-4 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity bg-[#131b2e] pl-2 rounded-l-lg shadow-[-10px_0_10px_rgba(19,27,46,0.9)] border border-slate-700/50">
                   <button
                     onClick={(e) => handleCopy(e, link)}
